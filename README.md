@@ -74,6 +74,17 @@ while True:
     elif command == 'cmdList': 
         for i in range(len(cmdList)):
             print(cmdList[i])
+
+# Arduino Serial Command Sender
+
+## Dependencies
+
+- **pyserial:** Used for serial communication with the Arduino.
+
+  Install the `pyserial` package via pip if it's not already installed:
+
+  ```bash
+  pip install pyserial
     elif command != 'exit':  
         serialInst.write(command.encode('utf-8'))
     else:
