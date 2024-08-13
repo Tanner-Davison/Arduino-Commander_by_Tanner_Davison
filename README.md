@@ -1,4 +1,4 @@
-# Arduino Serial Command Sender
+# Python Arduino Commander
 
 This Python script interacts with an Arduino board via a serial connection. It allows you to select a COM port, send commands to the Arduino, and manage the serial connection.
 
