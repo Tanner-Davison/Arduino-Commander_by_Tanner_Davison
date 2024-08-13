@@ -89,3 +89,16 @@ while True:
         serialInst.write(command.encode('utf-8'))
     else:
         print("Invalid command. Please try again.")
+## Setup
+
+1. Ensure the `pyserial` package is installed.
+2. Connect your Arduino to your computer.
+3. Run the script using a Python interpreter.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any questions or feedback, feel free to reach out at tanner.davison95@gmail.com
