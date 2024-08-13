@@ -37,45 +37,11 @@ This Python script interacts with an Arduino board via a serial connection. It a
 4. **Command Processing:**
    - Sends the command to the Arduino or prints an error message for invalid commands.
 
-### Script
+## Features
 
-```python
-import serial.tools.list_ports
-
-ports = serial.tools.list_ports.comports()
-serialInst = serial.Serial()
-portList = []
-cmdList = ["ON", "OFF", "ALEXIS","CUSTOM"]
-
-for one in ports:
-    portList.append(str(one))
-    print(str(one))
-
-com = input("Select Com Port for Arduino #: ")
-
-for i in range(len(portList)):
-    if portList[i].startswith(str(com)):
-        use = com  
-        print(use)
-
-serialInst.baudrate = 9600
-serialInst.port = use
-serialInst.open()
-
-while True:
-    command = input("Arduino Command ex:(ON/OFF/ALEXIS/Custom/exit)")
-
-    if command == 'CUSTOM':
-        if command is not None and command != "cmdList":
-            serialInst.write(command.encode('utf-8'))
-    elif command == 'exit':
-        serialInst.close()
-        exit()
-    elif command == 'cmdList': 
-        for i in range(len(cmdList)):
-            print(cmdList[i])
-
-# Arduino Serial Command Sender
+- **Port Detection:** Automatically detects available COM ports and allows you to select the correct port for your Arduino.
+- **Command Sending:** Sends various commands to the Arduino such as "ON", "OFF", "ALEXIS", and "CUSTOM".
+- **Interactive Console:** Provides an interactive console for inputting commands and viewing results.
 
 ## Dependencies
 
@@ -85,10 +51,7 @@ while True:
 
   ```bash
   pip install pyserial
-    elif command != 'exit':  
-        serialInst.write(command.encode('utf-8'))
-    else:
-        print("Invalid command. Please try again.")
+  
 ## Setup
 
 1. Ensure the `pyserial` package is installed.
