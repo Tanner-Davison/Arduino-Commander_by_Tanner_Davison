@@ -1,0 +1,113 @@
+#include <LiquidCrystal.h>
+
+#include <String.h>
+#include "dht_sensor.h"
+
+LiquidCrystal lcd(4, 6, 10, 11, 12, 13);
+const int redPin = 2;
+const int greenPin = 3;
+const int bluePin = 8;
+unsigned long delayTime = 4000;
+int tim = 500;
+String previousMsg = "";
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  pinMode(greenPin, OUTPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+
+
+  if (Serial.available() > 0) {
+    String msg = Serial.readString();
+    // Check if the message is different from the previous one
+
+    if (msg == "ON") {                     //ON
+      lcd.clear();
+      lcd.print("Cmd: ON");
+      lcd.setCursor(0, 1);
+      lcd.print("Green Light:ON");
+      digitalWrite(greenPin, HIGH);
+      delay(delayTime);
+      lcd.clear();
+
+    } else if (msg.startsWith("CUSTOM")) {  // Check for "CUSTOM" command
+      msg.remove(0, 6);
+      const int msgLength = msg.length();
+      if (msgLength < 16) {
+        lcd.clear();
+        lcd.noAutoscroll();
+        lcd.print(msg);
+      } else {
+        lcd.clear();
+        lcd.begin(16, 2);
+        lcd.setCursor(15, 0);
+        for (int i = 0; i < msgLength; i++) {
+          lcd.autoscroll();
+          lcd.print(msg[i]);
+          delay(tim);
+        }
+      }
+
+      delay(delayTime);
+      lcd.clear();
+      lcd.noAutoscroll();
+    } else if (msg == "OFF") {   //  OFF
+      lcd.clear();
+      lcd.print("Cmd: OFF");
+      lcd.setCursor(0, 1);
+      lcd.print("Green Light:OFF");
+      digitalWrite(greenPin, LOW);
+      delay(delayTime);
+      lcd.clear();
+    } else if (msg == "ALEXIS") { //ALEXIS
+      lcd.setCursor(0, 0);
+      lcd.clear();
+      lcd.print("Cmd: ALEXIS");
+      lcd.setCursor(0, 1);
+      lcd.print("Running...");
+      for (int i = 0; i < 20; i++) {
+        lcd.setCursor(10, 1);
+        lcd.print(String(i) + "/20");
+        digitalWrite(redPin, HIGH);
+        delay(100);
+        digitalWrite(redPin, LOW);
+        delay(100);
+        digitalWrite(greenPin, HIGH);
+        delay(100);
+        digitalWrite(greenPin, LOW);
+        delay(100);
+      }
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Command Completed");
+      delay(delayTime);
+      lcd.clear();
+    } else {
+      for (int i = 0; i < 5; i++) {
+        digitalWrite(redPin, HIGH);
+        delay(100);
+        digitalWrite(redPin, LOW);
+        delay(100);
+      }
+    }
+    previousMsg = msg;  // Update the previous message
+  }
+  float temperature = getTemperature();  // coming from dht_sensor.h
+  float humidity = getHumidity();
+
+  if (temperature > 60) {
+    digitalWrite(bluePin, HIGH);
+  }
+  lcd.setCursor(0, 0);  // set the cursor to column 15, line 0
+  const String myString = "Temperature " + String(temperature) + "F";
+  const String humidLcd = "Humidity " + String(humidity, 0) + "%";
+  lcd.print(myString);
+
+  lcd.setCursor(0, 1);
+  lcd.print(humidLcd);
+}
